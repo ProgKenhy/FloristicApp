@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FloriAI - Профиль</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-gray">
+		<a class="navbar-brand mx-3" href="index.html">FloriAI</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+			aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav me-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="index.html">Главная</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="translate.html">Перевести</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="contact.html">Контакты</a>
+				</li>
+			</ul>
+			<ul class="navbar-nav ms-auto me-3">
+				<li class="nav-item">
+					<a class="nav-link" href="profile.html">Профиль</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+<div class="container mt-5">
+    <h2>Ваш профиль</h2>
+    <form id="profileForm">
+        <div class="mb-3">
+            <label for="firstName" class="form-label">Имя</label>
+            <input type="text" class="form-control" id="firstName" placeholder="Введите ваше имя">
+        </div>
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Фамилия</label>
+            <input type="text" class="form-control" id="lastName" placeholder="Введите вашу фамилию">
+        </div>
+        <div class="mb-3">
+            <label for="gender" class="form-label">Пол</label>
+            <select class="form-select" id="gender">
+                <option value="male">Мужчина</option>
+                <option value="female">Женщина</option>
+                <option value="other">Другое</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="age" class="form-label">Возраст</label>
+            <input type="number" class="form-control" id="age" placeholder="Введите ваш возраст">
+        </div>
+
+        <!-- Раздел подписки -->
+        <div id="subscriptionSection" class="mt-4">
+            <h3>Подписка</h3>
+            <p>С подпиской вы можете использовать сервис без ограничений. Без подписки вы ограничены одним переводом букета в месяц.</p>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="subscribeCheck">
+                <label class="form-check-label" for="subscribeCheck">
+                    Подписаться на премиум план
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Сохранить изменения</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

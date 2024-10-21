@@ -1,65 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>FloriAI - Translate</title>
+	<title>FloriAI - Перевод</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<a class="navbar-brand" href="index.html">FloriAI</a>
+	<nav class="navbar navbar-expand-lg navbar-light bg-gray">
+		<a class="navbar-brand mx-3" href="index.html">FloriAI</a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-			aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="navbar-nav ml-auto">
+			<ul class="navbar-nav me-auto">
 				<li class="nav-item">
-					<a class="nav-link" href="index.html">Home</a>
+					<a class="nav-link" href="index.html">Главная</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="translate.html">Translate</a>
+					<a class="nav-link" href="translate.html">Перевести</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="contact.html">Contact</a>
+					<a class="nav-link" href="contact.html">Контакты</a>
+				</li>
+			</ul>
+			<ul class="navbar-nav ms-auto me-3">
+				<li class="nav-item">
+					<a class="nav-link" href="profile.html">Профиль</a>
 				</li>
 			</ul>
 		</div>
 	</nav>
 
 	<div class="container mt-4">
-		<h2>Upload a Photo of a Bouquet</h2>
+			<img src="../static/img/upload-icon.jpg" alt="Иконка загрузки" class="upload-icon">
+
+
 		<form id="uploadForm">
 			<div class="mb-3">
-				<label for="fileInput" class="form-label">Choose a photo:</label>
+				<label for="fileInput" class="form-label"></label>
 				<input type="file" class="form-control" id="fileInput">
 			</div>
 			<div class="mb-3">
-				<label for="cultureSelect" class="form-label">Select a Culture:</label>
+				<label for="cultureSelect" class="form-label">Выберите интерпретацию:</label>
 				<select class="form-select" id="cultureSelect">
-					<option value="all">All Cultures</option>
-					<option value="Western">Western</option>
-					<option value="Eastern">Eastern</option>
-					<option value="Japanese">Japanese</option>
-					<!-- Add more cultures as needed -->
+					<option value="all">Все интерпретации</option>
+					<option value="Western">Западная</option>
+					<option value="Eastern">Восточная</option>
+					<option value="Japanese">Японская</option>
 				</select>
 			</div>
-			<button type="button" class="btn btn-primary" onclick="showResults()">Analyze</button>
+			<button type="button" class="btn btn-primary" onclick="showResults()">Анализировать</button>
 		</form>
+		<!-- Букет дня -->
 
 		<div id="resultsSection" class="mt-4" style="display:none;">
-			<h3>Your Bouquet's Meaning Across Cultures</h3>
+			<h3>Значение вашего букета в разных культурах</h3>
 			<table class="table table-striped">
 				<thead>
 					<tr>
-						<th>Flower</th>
-						<th>Color</th>
-						<th>Culture</th>
-						<th>Meaning</th>
+						<th>Цветок</th>
+						<th>Цвет</th>
+						<th>Культура</th>
+						<th>Значение</th>
 					</tr>
 				</thead>
 				<tbody id="resultsTable"></tbody>
@@ -67,41 +74,7 @@
 		</div>
 	</div>
 
-	<script>
-		function showResults() {
-			// Sample data with culture details
-			const results = [
-				{ flower: 'Rose', color: 'Red', culture: 'Western', meaning: 'Love and Passion' },
-				{ flower: 'Rose', color: 'Red', culture: 'Eastern', meaning: 'Devotion and Respect' },
-				{ flower: 'Lily', color: 'White', culture: 'Western', meaning: 'Purity and Innocence' },
-				{ flower: 'Lily', color: 'White', culture: 'Japanese', meaning: 'Wealth and Prosperity' }
-			];
-
-			// Get the selected culture from the dropdown
-			const selectedCulture = document.getElementById('cultureSelect').value;
-
-			// Filter results based on selected culture
-			const filteredResults = selectedCulture === 'all'
-				? results // Show all results if 'All Cultures' is selected
-				: results.filter(result => result.culture === selectedCulture);
-
-			// Display the filtered results in a table
-			const resultsTable = document.getElementById('resultsTable');
-			resultsTable.innerHTML = '';
-			filteredResults.forEach(result => {
-				const row = document.createElement('tr');
-				row.innerHTML = `
-        <td>${result.flower}</td>
-        <td>${result.color}</td> <!-- ��������� ����������� ����� -->
-        <td>${result.culture}</td>
-        <td>${result.meaning}</td>
-    `;
-				resultsTable.appendChild(row);
-			});
-
-			document.getElementById('resultsSection').style.display = 'block';
-		}
-	</script>
+	<script src="../js/translate.js"></script>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
