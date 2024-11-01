@@ -1,0 +1,45 @@
+{% extends 'products/base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <div class="container mt-5">
+        <h2>Ваш профиль</h2>
+        <form id="profileForm">
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Имя</label>
+                <input type="text" class="form-control" id="firstName" placeholder="Введите ваше имя">
+            </div>
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Фамилия</label>
+                <input type="text" class="form-control" id="lastName" placeholder="Введите вашу фамилию">
+            </div>
+            <div class="mb-3">
+                <label for="gender" class="form-label">Пол</label>
+                <select class="form-select" id="gender">
+                    <option value="male">Мужчина</option>
+                    <option value="female">Женщина</option>
+                    <option value="other">Другое</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="age" class="form-label">Возраст</label>
+                <input type="number" class="form-control" id="age" placeholder="Введите ваш возраст">
+            </div>
+
+            <!-- Раздел подписки -->
+            <div id="subscriptionSection" class="mt-4">
+                <h3>Подписка</h3>
+                <p>С подпиской вы можете использовать сервис без ограничений. Без подписки вы ограничены одним переводом
+                    букета в месяц.</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="subscribeCheck">
+                    <label class="form-check-label" for="subscribeCheck">
+                        Подписаться на премиум план
+                    </label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Сохранить изменения</button>
+        </form>
+    </div>
+{% endblock %}
