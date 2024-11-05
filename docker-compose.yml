@@ -1,0 +1,149 @@
+x-app: &default-app
+  build:
+    context: "."
+    target: "app"
+    args:
+      - "UID=${UID:-1000}"
+      - "GID=${GID:-1000}"
+      - "DEBUG=${DEBUG:-false}"
+      - "NODE_ENV=${NODE_ENV:-production}"
+  depends_on:
+    postgres:
+      condition: "service_started"
+      required: false
+    redis:
+      condition: "service_started"
+      required: false
+  env_file:
+    - ".env"
+  restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+  stop_grace_period: "3s"
+  tty: true
+  volumes:
+    - "${DOCKER_WEB_VOLUME:-./public_collected:/app/public_collected}"
+    - /var/certbot/conf:/etc/letsencrypt/:ro
+    - ./media:/app/media
+
+
+x-assets: &default-assets
+  build:
+    context: "."
+    target: "assets"
+    args:
+      - "UID=${UID:-1000}"
+      - "GID=${GID:-1000}"
+      - "NODE_ENV=${NODE_ENV:-production}"
+  env_file:
+    - ".env"
+  profiles: [ "assets" ]
+  restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+  stop_grace_period: "0"
+  tty: true
+  volumes:
+    - ".:/app"
+
+services:
+  postgres:
+    deploy:
+      resources:
+        limits:
+          cpus: "${DOCKER_POSTGRES_CPUS:-0}"
+          memory: "${DOCKER_POSTGRES_MEMORY:-0}"
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+#      POSTGRES_USER: alexander
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+#      POSTGRES_PASSWORD: 3KuVVnk6
+      POSTGRES_DB: "${POSTGRES_DB}"
+#      POSTGRES_DB: db_flori
+    image: "postgres:16.3-bookworm"
+    profiles: [ "postgres" ]
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+    stop_grace_period: "3s"
+    volumes:
+      - "postgres_data:/var/lib/postgresql/data"
+
+  redis:
+    deploy:
+      resources:
+        limits:
+          cpus: "${DOCKER_REDIS_CPUS:-0}"
+          memory: "${DOCKER_REDIS_MEMORY:-0}"
+    image: "redis:7.2.5-bookworm"
+    profiles: [ "redis" ]
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+    stop_grace_period: "3s"
+    volumes:
+      - "redis:/data"
+
+  web:
+    <<: *default-app
+    deploy:
+      resources:
+        limits:
+          cpus: "${DOCKER_WEB_CPUS:-0}"
+          memory: "${DOCKER_WEB_MEMORY:-0}"
+    healthcheck:
+      test: "${DOCKER_WEB_HEALTHCHECK_TEST:-curl localhost:8000/up}"
+      interval: "60s"
+      timeout: "3s"
+      start_period: "5s"
+      retries: 3
+    ports:
+      - "${DOCKER_WEB_PORT_FORWARD:-127.0.0.1:8000}:${PORT:-8000}"
+    expose:
+      - "8000"
+    profiles: [ "web" ]
+
+
+  worker:
+    <<: *default-app
+    command: celery -A config worker -l "${CELERY_LOG_LEVEL:-info}"
+    entrypoint: [ ]
+    deploy:
+      resources:
+        limits:
+          cpus: "${DOCKER_WORKER_CPUS:-0}"
+          memory: "${DOCKER_WORKER_MEMORY:-0}"
+    profiles: [ "worker" ]
+
+  js:
+    <<: *default-assets
+    command: "../run yarn:build:js"
+
+  css:
+    <<: *default-assets
+    command: "../run yarn:build:css"
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+#      - "443:443"
+    volumes:
+      - ./nginx/dev/:/etc/nginx/conf.d:ro  # Монтируем файл конфигурации Nginx
+      - ./public_collected:/app/public_collected
+      - ./media:/app/media # Монтируем медиа файлы
+      - /var/certbot/conf:/etc/letsencrypt
+      - /var/certbot/www:/var/www/certbot
+    depends_on:
+      - web
+    restart: ${DOCKER_RESTART_POLICY:-unless-stopped}
+
+#  certbot:
+#    image: certbot/certbot:latest
+#    volumes:
+#      - /var/certbot/conf:/etc/letsencrypt/:rw
+#      - /var/certbot/www/:/var/www/certbot/:rw
+#    depends_on:
+#      - nginx
+#    environment:
+#      CERTBOT_PATH: /etc/letsencrypt/live/fesualstore.ru
+
+volumes:
+  postgres_data: { }
+  redis: { }
+
+#networks:
+#  store_default:
+#    driver: bridge

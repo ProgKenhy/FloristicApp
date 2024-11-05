@@ -13,32 +13,48 @@
 
 </head>
 <body>
-</header>
-<nav class="navbar navbar-expand-lg navbar-light bg-gray">
-    <a class="navbar-brand mx-3" href={% url 'index' %}>FloriAI</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">Главная</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'translater:index' %}">Перевести</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../../../../assets/html/contact.html">Контакты</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav ms-auto me-3">
-            <li class="nav-item">
-                <a class="nav-link" href="../../../users/templates/users/profile.html">Профиль</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-gray">
+        <a class="navbar-brand mx-3" href={% url 'index' %}>FloriAI</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'translater:index' %}">Перевести</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contact' %}">Контакты</a>
+                </li>
+            </ul>
+            {% if not user.is_authenticated %}
+                <ul class="navbar-nav ms-auto me-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:login' %}">Войти</a>
+                    </li>
+                </ul>
+            {% else %}
+                <ul class="navbar-nav ms-auto me-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:profile' user.id %}">Профиль</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav me-3">
+                    <li class="nav-item">
+                        <form action="{% url 'users:logout' %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn-no-style">Выйти</button>
+                        </form>
+                    </li>
+                </ul>
+            {% endif %}
+        </div>
+    </nav>
 </header>
 
 {% block content %} {% endblock %}

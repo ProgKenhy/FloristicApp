@@ -1,84 +1,84 @@
-{% extends 'users/base.html' %}
+{% extends 'layouts/base.html' %}
+{% load static %}
 
+{% block css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% endblock %}
 {% block content %}
     <main>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-7">
-                    {% if form.errors %}
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert"
-                             style="margin-top: 50px;">
-                            {{ form.errors }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>{% endif %}
+        <div class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+            <div class="col-md-7 col-lg-6">
+                {% if form.errors %}
+                    <div class="alert alert-warning alert-dismissible fade show shadow-sm mt-5" role="alert">
+                        {{ form.errors }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
 
-                    <div class="card shadow-lg border-0 rounded-lg mt-5">
-                        <div class="card-header"><h3 class="text-center font-weight-light my-4">Создать аккаунт</h3>
-                        </div>
-                        <div class="card-body">
-                            <form action="{% url 'users:registration' %}" method="post">
-                                {% csrf_token %}
-                                <div class="form-row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="small mb-1"
-                                                   for="{{ form.first_name.id_for_label }}">Имя</label>
-                                            {{ form.first_name }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="small mb-1"
-                                                   for="{{ form.last_name.id_for_label }}">Фамилия</label>
-                                            {{ form.last_name }}
-                                        </div>
-                                    </div>
+                <div class="card border-0 shadow-lg rounded-3 mt-5">
+                    <div class="card-header text-center py-4 bg-primary text-white">
+                        <h3 class="fw-bold mb-0">Создать аккаунт</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <form action="{% url 'users:registration' %}" method="post">
+                            {% csrf_token %}
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="{{ form.first_name.id_for_label }}"
+                                           class="form-label small text-muted"></label>
+                                    {{ form.first_name }}
                                 </div>
-                                <div class="form-row">
-                                    <div class="col-md-6">
-                                        <label class="small mb-1" for="{{ form.username.id_for_label }}">Имя
-                                            пользователя</label>
-                                        {{ form.username }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="small mb-1" for="{{ form.email.id_for_label }}">Адрес электронной
-                                            почты</label>
-                                        {{ form.email }}
-                                    </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.username.id_for_label }}"
+                                           class="form-label small text-muted"></label>
+                                    {{ form.username }}
                                 </div>
-                                <div class="form-row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="small mb-1"
-                                                   for="{{ form.password1.id_for_label }}">Пароль</label>
-                                            {{ form.password1 }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="small mb-1" for="{{ form.password2.id_for_label }}">Подтверждение
-                                                пароля</label>
-                                            {{ form.password2 }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group mt-4 mb-0">
-                                    <input class="btn btn-primary btn-block" type="submit" value="Создать аккаунт">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="card-footer text-center">
-                            <div class="small">
-                                <a href="{% url 'users:login' %}">
-                                    Уже есть аккаунт? Авторизоваться
-                                </a>
                             </div>
-                        </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="{{ form.email.id_for_label }}"
+                                           class="form-label small text-muted"></label>
+                                    {{ form.email }}
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3 position-relative">
+                                    <label for="{{ form.password1.id_for_label }}"
+                                           class="form-label small text-muted"></label>
+                                    {{ form.password1 }}
+                                    <span class="position-absolute top-50 end-0 me-4" style="cursor: pointer;"
+                                          onclick="togglePasswordVisibility('id_password1', 'togglePasswordIcon1')">
+                                        <i class="fa fa-eye" id="togglePasswordIcon1"></i>
+                                    </span>
+                                </div>
+                                <div class="col-md-6 mb-3 position-relative">
+                                    <label for="{{ form.password2.id_for_label }}"
+                                           class="form-label small text-muted"></label>
+                                    {{ form.password2 }}
+                                    <span class="position-absolute top-50 end-0 me-4" style="cursor: pointer;"
+                                          onclick="togglePasswordVisibility('id_password2', 'togglePasswordIcon2')">
+                                        <i class="fa fa-eye" id="togglePasswordIcon2"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+
+                            <button class="btn btn-primary btn-lg w-100 rounded-pill shadow mt-4" type="submit">Создать
+                                аккаунт
+                            </button>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center bg-light py-3">
+                        <p class="small mb-0"><a href="{% url 'users:login' %}" class="text-primary fw-bold">Уже есть
+                            аккаунт? Авторизоваться</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/authorization.js' %}"></script>
 {% endblock %}

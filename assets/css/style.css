@@ -1,0 +1,67 @@
+/* style.css */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+}
+
+.navbar {
+    background-color: #28a745;
+}
+
+h2, h3 {
+    text-align: center;
+    color: rgb(0, 0, 0);
+    padding: 20px;
+    background: url('img/flower-bg.jpg') no-repeat center center;
+    background-size: cover;
+    border-radius: 8px;
+}
+
+.container {
+    margin-top: 30px;
+}
+
+#profileSection, #subscriptionSection {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: url('img/bg-pattern.png');
+}
+
+.footer {
+    background-color: #28a745;
+    color: rgb(0, 0, 0);
+    padding: 10px 0;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.carousel-container {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 80%;
+}
+
+.bg-gray {
+    background: linear-gradient(90deg, rgba(175, 100, 130, 1) 0%, rgba(235, 198, 212, 1) 70%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* �������� ���� */
+}
+
+.bg-green {
+    background: #00a82b;
+}
+
+.navbar-brand, .nav-link {
+    color: #383838;
+}
+
+.navbar-brand:hover, .nav-link:hover {
+    color: #ff0000;
+}
+
+.upload-icon{
+	width: 100%;
+}

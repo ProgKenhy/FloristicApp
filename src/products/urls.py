@@ -1,6 +1,6 @@
 from django.urls import path
 
-from products.views import TranslaterView
+from products.views import TranslaterView, ContactView
 
 app_name = 'translater'
 
