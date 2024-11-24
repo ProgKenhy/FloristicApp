@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.views.static import serve
 from django.contrib import admin
 from products.views import IndexView, ContactView
+
 from django.urls import include, path, re_path
 
 static_urlpatterns = [
@@ -13,6 +14,7 @@ static_urlpatterns = [
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='index'),
+    path('check-task-status/', IndexView.as_view(), name='check_task_status'),
     path('translater/', include('products.urls', namespace='translater')),
     path('contact/', ContactView.as_view(), name='contact'),
     path('users/', include('users.urls', namespace='users')),

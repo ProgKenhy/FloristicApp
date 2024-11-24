@@ -106,6 +106,8 @@ services:
           cpus: "${DOCKER_WORKER_CPUS:-0}"
           memory: "${DOCKER_WORKER_MEMORY:-0}"
     profiles: [ "worker" ]
+    environment:
+      - GUNICORN_TIMEOUT=120
 
   js:
     <<: *default-assets

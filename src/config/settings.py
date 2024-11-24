@@ -9,6 +9,8 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+OPENAI_APIKEY = os.getenv('OPENAI_APIKEY')
+
 DOMAIN_NAME = os.getenv('DOMAIN_NAME', 'http://localhost:8000')
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -23,18 +25,25 @@ ALLOWED_HOSTS = list(map(str.strip, allowed_hosts.split(",")))
 # Application definition
 
 INSTALLED_APPS = [
+    # default apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # internal apps
     'products',
     'users',
+    'api',
 
+    # external apps
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -49,12 +58,12 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware'
 ]
 
-if not TESTING:
-    INSTALLED_APPS = [*INSTALLED_APPS, "debug_toolbar"]
-    MIDDLEWARE = [
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
-        *MIDDLEWARE,
-    ]
+# if not TESTING:
+#     INSTALLED_APPS = [*INSTALLED_APPS, "debug_toolbar"]
+#     MIDDLEWARE = [
+#         "debug_toolbar.middleware.DebugToolbarMiddleware",
+#         *MIDDLEWARE,
+#     ]
 
 ROOT_URLCONF = 'config.urls'
 
@@ -123,6 +132,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_TASK_TIME_LIMIT = 30 * 60
 
 # Caching
 # https://docs.djangoproject.com/en/5.0/topics/cache/
@@ -221,3 +231,11 @@ AUTHENTICATION_BACKENDS = [
     # `allauth` specific authentication methods, such as login by email
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+# API
+
+KANDINSKY_API_URL = 'https://api-key.fusionbrain.ai/'
+API_KEY_KANDINSKY = os.getenv('API_KEY_KANDINSKY')
+SECRET_KEY_KANDINSKY = os.getenv('SECRET_KEY_KANDINSKY')
+
+API_KEY_OPENAI = os.getenv('API_KEY_OPENAI')

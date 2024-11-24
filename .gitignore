@@ -8,11 +8,13 @@ public/*
 !public/.keep
 public_collected/*
 !public_collected/.keep
+.idea
 
 .env*
 !.env.example
 docker-compose.override.yml
 
+migrations/
 
 ### Python ####################################################################
 

@@ -44,22 +44,70 @@
         <div class="jumbotron text-center">
             <h1 class="display-4">Добро пожаловать в FloriAI!</h1>
             <p class="lead">Ваш переводчик языка цветов на основе искусственного интеллекта.</p>
-            <hr class="my-4">
-            <p>Узнайте значение каждого букета и создайте персонализированные цветочные композиции для любого случая.
-            </p>
-            <a class="btn btn-primary btn-lg" href="translate.html" role="button">Начать</a>
         </div>
     </div>
 
     <!-- Чат с ИИ -->
     <div class="container mt-4">
-        <h3>Поговорите с FloriAI Ассистентом</h3>
-        <textarea id="chatbox" class="form-control" rows="5" placeholder="Спросите о вашем букете..."></textarea>
-        <button type="button" class="btn btn-success mt-2">Отправить</button>
+        <div class="row">
+            <!-- Форма для ввода текста -->
+            <form action="" method="post" class="col-lg-6 mt-0">
+                <h3>Введите необходимые параметры букета</h3>
+                {% csrf_token %}
+                <textarea
+                        name="chatboxImageGen"
+                        id="chatboxImageGen"
+                        class="form-control"
+                        rows="21"
+                        placeholder="Спросите о вашем букете..."
+                        required
+                ></textarea>
+                <button id="sendButtonImageGen" type="submit" class="btn btn-success mt-2">
+                    Отправить
+                </button>
+            </form>
+
+            <!-- Отображение сгенерированного изображения -->
+            <div class="container text-center col-lg-6 mt-0">
+                <h3>Ваше сгенерированное изображение</h3>
+                <div class="image-container">
+                    {% if image_url %}
+                        <img
+                                class="w-100 rounded-lg"
+                                src="{{ image_url }}"
+                                alt="Сгенерированное изображение"
+                                style="max-width: 512px; border: 1px solid #ddd; padding: 5px; margin-top: 10px;"
+                        />
+                    {% else %}
+                        <img
+                                class="w-100 rounded-lg"
+                                src="{% static 'img/bg_gen.jpeg' %}"
+                                alt="Фоновое изображение"
+                                style="max-width: 512px; border: 1px solid #ddd; padding: 5px; margin-top: 10px;"
+                        />
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 
+    <div class="container mt-4">
+        <div class="jumbotron text-center">
+            <hr class="my-4">
+            <p>А также, узнайте значение каждого букета относительно языка цветов по его изображению!
+                <a class="btn btn-primary btn-lg mx-2" href="{% url 'translater:index' %}" role="button">Начать
+                </a>
+            </p>
+
+        </div>
+    </div>
     <!-- Рекламный баннер -->
     <div id="adSection" class="mt-4 text-center">
-        <img width="1000" src="{% static 'img/adbanner.jpg' %}" alt="Рекламный баннер" class="img-fluid mx-auto d-block">
+        <img width="1000" src="{% static 'img/adbanner.jpg' %}" alt="Рекламный баннер"
+             class="img-fluid mx-auto d-block">
     </div>
+{% endblock %}
+
+{% block scripts %}
+{#    <script src="{% static 'js/generation.js' %}"></script>#}
 {% endblock %}
