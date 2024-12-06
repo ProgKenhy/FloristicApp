@@ -1,4 +1,5 @@
 import openai
+from openai import OpenAIError
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.http import JsonResponse
@@ -37,9 +38,11 @@ class TranslaterView(TemplateView):
     title = 'FloriAI - Translater'
 
     def post(self, request, *args, **kwargs):
+        context = {}
         if request.FILES.get('file'):
             file = request.FILES['file']
-            file_path = default_storage.save(f"temp/{file.name}", file)
+            file_name = default_storage.save(f"temp/{file.name}", file)
+            file_path = default_storage.path(file_name)
 
             try:
                 openai.api_key = settings.API_KEY_OPENAI
@@ -52,16 +55,20 @@ class TranslaterView(TemplateView):
                         size="1024x1024"
                     )
 
+                if response and 'data' in response:
+                    context['result'] = response['data']
+                else:
+                    context['error'] = 'Ошибка анализа изображения'
+
+            except OpenAIError as e:
+                context['error'] = f"Ошибка OpenAI: {str(e)}"
+            finally:
                 default_storage.delete(file_path)
 
-                if response and 'data' in response:
-                    return JsonResponse({'status': 'success', 'data': response['data']})
-                else:
-                    return JsonResponse({'status': 'error', 'message': 'Ошибка анализа изображения'}, status=500)
-            except openai.error.OpenAIError as e:
-                return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+            return self.render_to_response(context)
 
-        return JsonResponse({'status': 'error', 'message': 'Неверный запрос'}, status=400)
+        context['error'] = 'Пожалуйста, загрузите файл'
+        return self.render_to_response(context)
 
 
 class ContactView(TemplateView):
