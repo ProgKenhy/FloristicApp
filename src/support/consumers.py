@@ -3,7 +3,7 @@ import json
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-from support.models import ChatSupportSession, ChatSupportMessage
+
 
 
 class ChatSupportConsumer(AsyncWebsocketConsumer):
@@ -27,12 +27,13 @@ class ChatSupportConsumer(AsyncWebsocketConsumer):
         )
 
     async def receive(self, text_data):
+        from support.models import ChatSupportSession, ChatSupportMessage
         data = json.loads(text_data)
         message = data['message']
-        sender = message['sender']
+        sender = data['sender']
 
         # Сохраняем сообщение в базе данных
-        session = await sync_to_async(ChatSupportSession.objects.get)(session_id=sender)
+        session = await sync_to_async(ChatSupportSession.objects.get)(id=self.session_id)
         await sync_to_async(ChatSupportMessage.objects.create)(
             session=session,
             sender=sender,
