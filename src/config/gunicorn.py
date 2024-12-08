@@ -11,6 +11,6 @@ workers = int(os.getenv("WEB_CONCURRENCY", multiprocessing.cpu_count() * 2))
 threads = int(os.getenv("PYTHON_MAX_THREADS", 1))
 
 reload = bool(os.getenv("WEB_RELOAD", False))
-# timeout = 120 # 120 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+timeout = 120 # 120 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 # TODO
