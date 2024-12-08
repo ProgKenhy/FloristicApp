@@ -12,8 +12,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const config = {
-  entryPoints: ['./js/app.js'],
-  outfile: '../public/js/app.js',
+  entryPoints: ['./js/authorization.js'],
+  outfile: '../public/js/authorization.js',
   bundle: true,
   minify: minify,
   sourcemap: sourcemap,
