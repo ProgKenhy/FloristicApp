@@ -1,8 +1,9 @@
 import json
 
-from channels.generic.websocket import AsyncWebsocketConsumer
-from support.models import ChatSupportSession, ChatSupportMessage
 from asgiref.sync import sync_to_async
+from channels.generic.websocket import AsyncWebsocketConsumer
+
+from support.models import ChatSupportSession, ChatSupportMessage
 
 
 class ChatSupportConsumer(AsyncWebsocketConsumer):
@@ -50,7 +51,9 @@ class ChatSupportConsumer(AsyncWebsocketConsumer):
 
     async def chat_message(self, event):
         # Отправляем сообщение клиенту
-        await self.send(text_data=json.dumps({
-            "message": event['message'],
-            "sender": event['sender'],
-        }))
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "message": event['message'],
+                    "sender": event['sender'],
+                }))

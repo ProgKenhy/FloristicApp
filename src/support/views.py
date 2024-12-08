@@ -26,7 +26,7 @@ class SendMessageView(APIView):
     def post(self, request, *args, **kwargs):
         try:
             content = request.data.get('content')
-            sender = "Модератор" if request.user.is_staff else request.user.username.title()
+            sender = "Модератор" if request.user.is_staff else request.user.first_name.title()
             if request.user.is_staff:
                 session_id = request.data.get('session_id')
                 if not session_id:

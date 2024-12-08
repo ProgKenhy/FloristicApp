@@ -7,9 +7,9 @@ from django.utils.timezone import now
 
 
 class SexOptions(models.TextChoices):
-    FEMALE = 'F', 'Female'
-    MALE = 'M', 'Male'
-    UNSURE = 'U', 'Unsure'
+    FEMALE = 'F', 'Женщина'
+    MALE = 'M', 'Мужчина'
+    UNSURE = 'U', 'Другое'
 
 
 class User(AbstractUser):

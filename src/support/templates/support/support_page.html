@@ -2,86 +2,99 @@
 {% load static %}
 
 {% block content %}
-    <div class="container mt-4">
-        <h1>Чат с техподдержкой</h1>
+<div class="container mt-4">
+    <h1>Чат с техподдержкой</h1>
 
-        <div class="chat-box border p-3 mb-3" style="height: 300px; overflow-y: scroll;">
-            {% if session %}
-                {% for message in messages %}
-                    <div class="mb-2">
-                        <strong>{{ message.sender }}:</strong>
-                        <span>{{ message.content }}</span>
-                        <small class="text-muted">{{ message.timestamp }}</small>
-                    </div>
-                    {% empty %}
-                    <p>Сообщений пока нет. Начните общение!</p>
-                {% endfor %}
-            {% else %}
-                <p>Сессия ещё не начата. Отправьте сообщение, чтобы начать.</p>
-            {% endif %}
-        </div>
-
-        <form id="messageForm" class="d-flex">
-            {% csrf_token %}
-            <input type="hidden" name="session_id" value="{% if session %}{{ session.id }}{% endif %}">
-            <input type="text" name="content" class="form-control me-2" placeholder="Введите сообщение" required>
-            <button type="submit" class="btn btn-primary">Отправить</button>
-        </form>
-
-        <div id="statusMessage" class="mt-2"></div>
+    <div class="chat-box border p-3 mb-3" style="height: 300px; overflow-y: scroll;">
+        {% if session %}
+            {% for message in messages %}
+                <div class="mb-2">
+                    <strong>{{ message.sender }}:</strong>
+                    <span>{{ message.content }}</span>
+                    <small class="text-muted">{{ message.timestamp }}</small>
+                </div>
+            {% empty %}
+                <p>Сообщений пока нет. Начните общение!</p>
+            {% endfor %}
+        {% else %}
+            <p>Сессия ещё не начата. Отправьте сообщение, чтобы начать.</p>
+        {% endif %}
     </div>
 
+    <form id="messageForm" class="d-flex">
+        {% csrf_token %}
+        <input type="hidden" name="session_id" value="{% if session %}{{ session.id }}{% endif %}">
+        <input type="text" name="content" class="form-control me-2" placeholder="Введите сообщение" required>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+
+    <div id="statusMessage" class="mt-2"></div>
+
+    <!-- Добавляем скрытые элементы для session_id и user_username -->
+    <div id="session_id" style="display: none;">{{ session.id }}</div>
+    <div id="user_username" style="display: none;">{{ user.username }}</div>
+</div>
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $("#messageForm").submit(function (e) {
-                e.preventDefault();
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const sessionId = document.getElementById('session_id').textContent.trim();
+    const userUsername = document.getElementById('user_username').textContent.trim();
+    const chatBox = document.querySelector('.chat-box');
+    const messageForm = document.getElementById('messageForm');
+    const messageInput = messageForm.querySelector('[name=content]');
 
-                const form = $(this);
-                const sessionIdField = form.find("[name=session_id]");
-                const sessionId = sessionIdField.val(); // Получаем session_id, если он есть
-                const content = form.find("[name=content]").val();
+    if (!sessionId) {
+        console.error('Session ID отсутствует. Начните чат, чтобы создать сессию.');
+        return;
+    }
 
-                $.ajax({
-                    url: "{% url 'support:send_message' %}",
-                    type: "POST",
-                    data: JSON.stringify({
-                        session_id: sessionId,
-                        content: content,
-                    }),
-                    contentType: "application/json",
-                    headers: {
-                        "X-CSRFToken": form.find("[name=csrfmiddlewaretoken]").val(),
-                    },
-                    success: function (data) {
-                        if (data.status === "success") {
-                            const chatBox = $(".chat-box");
-                            chatBox.append(`
-                                <div class="mb-2">
-                                    <strong>${data.message.sender}:</strong>
-                                    <span>${data.message.content}</span>
-                                    <small class="text-muted">${data.message.timestamp}</small>
-                                </div>
-                            `);
-                            chatBox.scrollTop(chatBox[0].scrollHeight);
+    // Создаём WebSocket соединение
+    const chatSocket = new WebSocket(
+        `${window.location.protocol === 'https:' ? 'wss://' : 'ws://'}${window.location.host}/ws/support/${sessionId}/`
+    );
 
-                            // Если сессия только что создана, обновляем session_id
-                            if (!sessionId) {
-                                sessionIdField.val(data.session_id);
-                            }
+    // Обработка отправки сообщения
+    messageForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const message = messageInput.value.trim();
+        if (message) {
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'sender': userUsername,
+            }));
+            messageInput.value = '';  // Очистка поля ввода после отправки
+        }
+    });
 
-                            form[0].reset();
-                        }
-                    },
-                    error: function (xhr) {
-                        const error = xhr.responseJSON?.error || "Ошибка при отправке сообщения.";
-                        $("#statusMessage").text(error);
-                    }
-                });
-            });
-        });
-    </script>
+    // Обработка входящих сообщений
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        const newMessage = document.createElement('div');
+        newMessage.classList.add('mb-2');
+        newMessage.innerHTML = `<strong>${data.sender}:</strong> <span>${data.message}</span>`;
+        chatBox.appendChild(newMessage);
+        chatBox.scrollTop = chatBox.scrollHeight;  // Автопрокрутка вниз
+    };
+
+    // Обработка закрытия соединения
+    chatSocket.onclose = function () {
+        const errorMessage = document.createElement('div');
+        errorMessage.classList.add('text-danger', 'mb-2');
+        errorMessage.textContent = 'Соединение с сервером закрыто.';
+        chatBox.appendChild(errorMessage);
+    };
+
+    // Обработка ошибок соединения
+    chatSocket.onerror = function (error) {
+        console.error('Ошибка WebSocket:', error);
+        const errorMessage = document.createElement('div');
+        errorMessage.classList.add('text-danger', 'mb-2');
+        errorMessage.textContent = 'Ошибка соединения с сервером.';
+        chatBox.appendChild(errorMessage);
+    };
+});
+</script>
+
 {% endblock %}

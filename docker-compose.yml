@@ -6,14 +6,11 @@ x-app: &default-app
       - "UID=${UID:-1000}"
       - "GID=${GID:-1000}"
       - "DEBUG=${DEBUG:-false}"
-      - "NODE_ENV=${NODE_ENV:-production}"
   depends_on:
     postgres:
-      condition: "service_started"
-      required: false
+      condition: "service_healthy"
     redis:
-      condition: "service_started"
-      required: false
+      condition: "service_healthy"
   env_file:
     - ".env"
   restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
@@ -21,8 +18,8 @@ x-app: &default-app
   tty: true
   volumes:
     - "${DOCKER_WEB_VOLUME:-./public_collected:/app/public_collected}"
-    - /var/certbot/conf:/etc/letsencrypt/:ro
-    - ./media:/app/media
+    - "/var/certbot/conf:/etc/letsencrypt/:ro"
+    - "./media:/app/media"
 
 
 x-assets: &default-assets
@@ -35,7 +32,6 @@ x-assets: &default-assets
       - "NODE_ENV=${NODE_ENV:-production}"
   env_file:
     - ".env"
-  profiles: [ "assets" ]
   restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
   stop_grace_period: "0"
   tty: true
@@ -44,6 +40,7 @@ x-assets: &default-assets
 
 services:
   postgres:
+    image: "postgres:16.3-bookworm"
     deploy:
       resources:
         limits:
@@ -53,22 +50,28 @@ services:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       POSTGRES_DB: "${POSTGRES_DB}"
-    image: "postgres:16.3-bookworm"
-    profiles: [ "postgres" ]
-    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
-    stop_grace_period: "3s"
     volumes:
       - "postgres_data:/var/lib/postgresql/data"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 10s
+      retries: 5
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+    stop_grace_period: "3s"
+
 
   redis:
+    image: "redis:7.2.5-bookworm"
     deploy:
       resources:
         limits:
           cpus: "${DOCKER_REDIS_CPUS:-0}"
           memory: "${DOCKER_REDIS_MEMORY:-0}"
-    image: "redis:7.2.5-bookworm"
-    profiles: [ "redis" ]
     restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      retries: 5
     stop_grace_period: "3s"
     volumes:
       - "redis:/data"
@@ -81,7 +84,7 @@ services:
           cpus: "${DOCKER_WEB_CPUS:-0}"
           memory: "${DOCKER_WEB_MEMORY:-0}"
     healthcheck:
-      test: "${DOCKER_WEB_HEALTHCHECK_TEST:-curl localhost:8000/up}"
+      test: "${DOCKER_WEB_HEALTHCHECK_TEST:-curl localhost:8000}"
       interval: "60s"
       timeout: "3s"
       start_period: "5s"
@@ -90,7 +93,18 @@ services:
       - "${DOCKER_WEB_PORT_FORWARD:-127.0.0.1:8000}:${PORT:-8000}"
     expose:
       - "8000"
-    profiles: [ "web" ]
+
+
+  daphne:
+    <<: *default-app
+    deploy:
+      resources:
+        limits:
+          cpus: "${DOCKER_WEB_CPUS:-0}"
+          memory: "${DOCKER_WEB_MEMORY:-0}"
+    command: daphne -b 0.0.0.0 -p 8001 Reporting.asgi:application
+    expose:
+      - "8001"
 
 
   worker:
@@ -102,9 +116,7 @@ services:
         limits:
           cpus: "${DOCKER_WORKER_CPUS:-0}"
           memory: "${DOCKER_WORKER_MEMORY:-0}"
-    profiles: [ "worker" ]
-    environment:
-      - GUNICORN_TIMEOUT=120
+
 
   js:
     <<: *default-assets
@@ -115,14 +127,14 @@ services:
     command: "../run yarn:build:css"
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.25.1
     ports:
       - "80:80"
-#      - "443:443"
+    #      - "443:443"
     volumes:
       - ./nginx/dev/:/etc/nginx/conf.d:ro  # Монтируем файл конфигурации Nginx
       - ./public_collected:/app/public_collected
-      - ./media:/app/media # Монтируем медиа файлы
+      - ./media:/app/media
       - /var/certbot/conf:/etc/letsencrypt
       - /var/certbot/www:/var/www/certbot
     depends_on:

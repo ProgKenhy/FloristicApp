@@ -41,7 +41,7 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'password1', 'password2')
+        fields = ('first_name', 'username', 'email', 'password1', 'password2')
 
     def save(self, commit=True):
         user = super(UserRegistrationForm, self).save(commit=True)
@@ -51,19 +51,19 @@ class UserRegistrationForm(UserCreationForm):
 
 
 class UserProfileForm(UserChangeForm):
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control py-4'}))
-    last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control py-4'}))
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control py-4', 'readonly': True}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': True}))
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'readonly': True}))
     sex = forms.ChoiceField(
         choices=SexOptions.choices,
         widget=forms.Select(attrs={
-            'class': 'form-control py-4',
+            'class': 'form-control',
             'placeholder': "Выберите пол"}))
     age = forms.IntegerField(
         widget=forms.NumberInput(attrs={
-            'class': 'form-control py-4',
+            'class': 'form-control',
             'placeholder': "Укажите ваш возраст"}))
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('username', 'first_name', 'email', 'sex', 'age')

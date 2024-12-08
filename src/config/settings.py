@@ -26,6 +26,7 @@ ALLOWED_HOSTS = list(map(str.strip, allowed_hosts.split(",")))
 
 INSTALLED_APPS = [
     # external apps
+    'daphne',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -244,12 +245,19 @@ SECRET_KEY_KANDINSKY = os.getenv('SECRET_KEY_KANDINSKY')
 API_KEY_OPENAI = os.getenv('API_KEY_OPENAI')
 
 # Channels
+# ASGI_APPLICATION = "config.asgi.application"
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [REDIS_URL],
+#         },
+#     },
+# }
+
 ASGI_APPLICATION = "config.asgi.application"
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [REDIS_URL],
-        },
-    },
-}
+    'default': {
+        'BACKEND': "channels.layers.InMemoryChannelLayer"
+        }
+    }
