@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LoginView, PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse_lazy, reverse
 from django.shortcuts import HttpResponseRedirect
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView
 from django.views.generic.base import TemplateView
 
@@ -60,3 +60,6 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                        " Если вы не получили электронное письмо, Пожалуйста, убедитесь, что вы правильно ввели адрес,"
                        " под которым зарегистрировались, и проверьте папку со спамом.")
     success_url = reverse_lazy('users:login')
+
+
+

@@ -5,6 +5,7 @@ asgiref==3.8.1
 billiard==4.2.1
 celery==5.5.0rc1
 certifi==2024.8.30
+channels==4.2.0
 charset-normalizer==3.4.0
 click==8.1.7
 click-didyoumean==0.3.1
@@ -26,6 +27,7 @@ jiter==0.7.0
 kombu==5.4.2
 openai==1.54.3
 packaging==24.1
+pillow==11.0.0
 prompt_toolkit==3.0.48
 psycopg==3.2.3
 pydantic==2.9.2

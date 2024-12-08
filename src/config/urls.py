@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.static import serve
 from django.contrib import admin
-from products.views import IndexView, ContactView
+from products.views import IndexView
 
 from django.urls import include, path, re_path
 
@@ -16,8 +16,8 @@ urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('check-task-status/', IndexView.as_view(), name='check_task_status'),
     path('translater/', include('products.urls', namespace='translater')),
-    path('contact/', ContactView.as_view(), name='contact'),
     path('users/', include('users.urls', namespace='users')),
+    path('support/', include('support.urls', namespace='support')),
 ]
 
 if settings.DEBUG:

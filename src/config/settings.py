@@ -25,6 +25,20 @@ ALLOWED_HOSTS = list(map(str.strip, allowed_hosts.split(",")))
 # Application definition
 
 INSTALLED_APPS = [
+    # external apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'channels',
+
+    # internal apps
+    'products',
+    'users',
+    'api',
+    'support',
+
     # default apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -33,17 +47,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # internal apps
-    'products',
-    'users',
-    'api',
-
-    # external apps
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'rest_framework',
-    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -239,3 +242,14 @@ API_KEY_KANDINSKY = os.getenv('API_KEY_KANDINSKY')
 SECRET_KEY_KANDINSKY = os.getenv('SECRET_KEY_KANDINSKY')
 
 API_KEY_OPENAI = os.getenv('API_KEY_OPENAI')
+
+# Channels
+ASGI_APPLICATION = "config.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [REDIS_URL],
+        },
+    },
+}

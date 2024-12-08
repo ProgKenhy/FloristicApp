@@ -1,0 +1,87 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Чат с техподдержкой</h1>
+
+        <div class="chat-box border p-3 mb-3" style="height: 300px; overflow-y: scroll;">
+            {% if session %}
+                {% for message in messages %}
+                    <div class="mb-2">
+                        <strong>{{ message.sender }}:</strong>
+                        <span>{{ message.content }}</span>
+                        <small class="text-muted">{{ message.timestamp }}</small>
+                    </div>
+                    {% empty %}
+                    <p>Сообщений пока нет. Начните общение!</p>
+                {% endfor %}
+            {% else %}
+                <p>Сессия ещё не начата. Отправьте сообщение, чтобы начать.</p>
+            {% endif %}
+        </div>
+
+        <form id="messageForm" class="d-flex">
+            {% csrf_token %}
+            <input type="hidden" name="session_id" value="{% if session %}{{ session.id }}{% endif %}">
+            <input type="text" name="content" class="form-control me-2" placeholder="Введите сообщение" required>
+            <button type="submit" class="btn btn-primary">Отправить</button>
+        </form>
+
+        <div id="statusMessage" class="mt-2"></div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#messageForm").submit(function (e) {
+                e.preventDefault();
+
+                const form = $(this);
+                const sessionIdField = form.find("[name=session_id]");
+                const sessionId = sessionIdField.val(); // Получаем session_id, если он есть
+                const content = form.find("[name=content]").val();
+
+                $.ajax({
+                    url: "{% url 'support:send_message' %}",
+                    type: "POST",
+                    data: JSON.stringify({
+                        session_id: sessionId,
+                        content: content,
+                    }),
+                    contentType: "application/json",
+                    headers: {
+                        "X-CSRFToken": form.find("[name=csrfmiddlewaretoken]").val(),
+                    },
+                    success: function (data) {
+                        if (data.status === "success") {
+                            const chatBox = $(".chat-box");
+                            chatBox.append(`
+                                <div class="mb-2">
+                                    <strong>${data.message.sender}:</strong>
+                                    <span>${data.message.content}</span>
+                                    <small class="text-muted">${data.message.timestamp}</small>
+                                </div>
+                            `);
+                            chatBox.scrollTop(chatBox[0].scrollHeight);
+
+                            // Если сессия только что создана, обновляем session_id
+                            if (!sessionId) {
+                                sessionIdField.val(data.session_id);
+                            }
+
+                            form[0].reset();
+                        }
+                    },
+                    error: function (xhr) {
+                        const error = xhr.responseJSON?.error || "Ошибка при отправке сообщения.";
+                        $("#statusMessage").text(error);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

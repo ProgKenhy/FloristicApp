@@ -1,10 +1,9 @@
 from django.conf import settings
-
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.core.mail import send_mail
 from django.db import models
 from django.urls import reverse
 from django.utils.timezone import now
-from django.core.mail import send_mail
 
 
 class SexOptions(models.TextChoices):
@@ -64,3 +63,5 @@ class EmailVerification(models.Model):
 
     def is_expired(self):
         return now() >= self.expiration
+
+

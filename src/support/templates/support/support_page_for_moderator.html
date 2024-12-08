@@ -1,0 +1,15 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h1>Панель модератора</h1>
+    <div class="list-group">
+        {% for session in sessions %}
+            <a href="{% url 'support:session' session.id %}" class="list-group-item list-group-item-action">
+                Сессия ID: {{ session.id }} - {{ session.created_at }}
+            </a>
+        {% empty %}
+            <p>Нет открытых сессий.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
