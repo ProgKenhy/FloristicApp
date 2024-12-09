@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             chatSocket.send(JSON.stringify({
                 'message': message,
                 'sender': userUsername,
+                'timestamp': new Date().toISOString()
             }));
             messageInput.value = '';  // Очистка поля ввода после отправки
         }
@@ -36,7 +37,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = JSON.parse(e.data);
         const newMessage = document.createElement('div');
         newMessage.classList.add('mb-2');
-        newMessage.innerHTML = `<strong>${data.sender}:</strong> <span>${data.message}</span>`;
+
+        // Преобразование времени в нужный формат
+        const timestamp = new Date(data.timestamp);
+        const day = timestamp.getDate();
+
+        // Массив со склоняемыми месяцами
+        const months = [
+            "января", "февраля", "марта", "апреля", "мая", "июня",
+            "июля", "августа", "сентября", "октября", "ноября", "декабря"
+        ];
+        const month = months[timestamp.getMonth()]; // Получаем месяц по индексу (0 - январь, 1 - февраль и т.д.)
+
+        const year = timestamp.getFullYear();
+        const hour = timestamp.getHours();
+        const minute = timestamp.getMinutes().toString().padStart(2, '0'); // добавляем ведущий ноль
+
+        const formattedTimestamp = `${day} ${month} ${year} г. ${hour}:${minute}`;
+        newMessage.innerHTML = `<strong>${data.sender}:</strong> <span>${data.message}</span>
+            <small class="text-muted">${formattedTimestamp}</small>`;
+        chatBox.appendChild(newMessage);
         chatBox.appendChild(newMessage);
         chatBox.scrollTop = chatBox.scrollHeight;  // Автопрокрутка вниз
     };
