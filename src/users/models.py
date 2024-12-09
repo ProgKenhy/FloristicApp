@@ -7,9 +7,9 @@ from django.utils.timezone import now
 
 
 class SexOptions(models.TextChoices):
+    UNSURE = 'U', 'Не выбрано'
     FEMALE = 'F', 'Женщина'
     MALE = 'M', 'Мужчина'
-    UNSURE = 'U', 'Другое'
 
 
 class User(AbstractUser):
@@ -63,5 +63,3 @@ class EmailVerification(models.Model):
 
     def is_expired(self):
         return now() >= self.expiration
-
-
