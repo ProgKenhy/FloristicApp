@@ -142,7 +142,7 @@ services:
       - "80:80"
     #      - "443:443"
     volumes:
-      - ./nginx/dev/:/etc/nginx/conf.d:ro  # Монтируем файл конфигурации Nginx
+      - ./nginx/prod/:/etc/nginx/conf.d:ro  # Монтируем файл конфигурации Nginx
       - ./public_collected:/app/public_collected
       - ./media:/app/media
       - /var/certbot/conf:/etc/letsencrypt
@@ -152,20 +152,16 @@ services:
       - daphne
     restart: ${DOCKER_RESTART_POLICY:-unless-stopped}
 
-#  certbot:
-#    image: certbot/certbot:latest
-#    volumes:
-#      - /var/certbot/conf:/etc/letsencrypt/:rw
-#      - /var/certbot/www/:/var/www/certbot/:rw
-#    depends_on:
-#      - nginx
-#    environment:
-#      CERTBOT_PATH: /etc/letsencrypt/live/fesualstore.ru
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - /var/certbot/conf:/etc/letsencrypt/:rw
+      - /var/certbot/www/:/var/www/certbot/:rw
+    depends_on:
+      - nginx
+    environment:
+      CERTBOT_PATH: /etc/letsencrypt/live/floriai.ru
 
 volumes:
   postgres_data: { }
   redis: { }
-
-#networks:
-#  store_default:
-#    driver: bridge
