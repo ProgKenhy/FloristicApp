@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView
 from rest_framework.views import APIView
@@ -23,7 +23,7 @@ class SupportPageView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class SendMessageView(APIView):
+class SendMessageView(LoginRequiredMixin, APIView):
     def post(self, request, *args, **kwargs):
         try:
             content = request.data.get('content')
@@ -50,7 +50,7 @@ class SendMessageView(APIView):
             return JsonResponse({"error": str(e)}, status=400)
 
 
-class ModeratorDashboardView(TemplateView):
+class ModeratorDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'support/support_page_for_moderator.html'
 
     def get_context_data(self, *args, **kwargs):
