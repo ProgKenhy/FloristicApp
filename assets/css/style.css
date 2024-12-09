@@ -64,3 +64,47 @@ h2, h3 {
 .upload-icon{
 	width: 100%;
 }
+
+.chat-box{
+    overflow-y: scroll; /* Прокрутка сообщений, если они не помещаются */
+    padding: 15px; /* Отступы внутри */
+}
+
+.message {
+    margin-bottom: 20px; /* Добавляет отступ между сообщениями */
+}
+
+
+
+/* Медиазапрос для экранов шириной до 768px (например, планшеты и телефоны) */
+@media (max-width: 768px) {
+
+    .lead {
+        font-size: 1rem; /* Уменьшаем текст для описания */
+    }
+
+    .navbar-collapse {
+        padding-left: 15px;  /* Добавляем отступ слева */
+        padding-right: 15px; /* Добавляем отступ справа */
+    }
+
+    .navbar-nav {
+        margin-left: 0;  /* Убираем лишний отступ слева */
+        margin-right: 0; /* Убираем лишний отступ справа */
+    }
+
+
+
+    .navbar-toggler {
+        margin-right: 10px; /* Добавляем немного отступа справа для кнопки */
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        width: 30px;  /* Уменьшаем размер стрелки */
+        height: 30px; /* Уменьшаем размер стрелки */
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+        padding: 0.5rem; /* Уменьшаем padding вокруг кнопок */
+    }
+}

@@ -78,3 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
         chatBox.appendChild(errorMessage);
     };
 });
+
+function autoResize(element) {
+    element.style.height = 'auto';  // Сбрасываем высоту, чтобы правильно измерить новый размер
+    element.style.height = (element.scrollHeight) + 'px';  // Устанавливаем высоту в зависимости от контента
+}

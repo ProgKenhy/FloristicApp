@@ -2,38 +2,40 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1>Чат с техподдержкой</h1>
+    <div class="container mt-4">
+        <h1 class="pb-3 text-center">Чат с техподдержкой</h1>
 
-    <div class="chat-box border p-3 mb-3" style="height: 300px; overflow-y: scroll;">
-        {% if session %}
-            {% for message in messages %}
-                <div class="mb-2">
-                    <strong>{{ message.sender|title }}:</strong>
-                    <span>{{ message.content }}</span>
-                    <small class="text-muted">{{ message.timestamp }}</small>
-                </div>
-            {% empty %}
-                <p>Сообщений пока нет. Начните общение!</p>
-            {% endfor %}
-        {% else %}
-            <p>Сессия ещё не начата. Отправьте сообщение, чтобы начать.</p>
-        {% endif %}
+        <div class="chat-box border p-3 mb-3">
+            {% if session %}
+                {% for message in messages %}
+                    <div class="message mb-2">
+                        <strong>{{ message.sender|title }}:</strong>
+                        <span>{{ message.content }}</span>
+                        <small class="text-muted">{{ message.timestamp }}</small>
+                    </div>
+                    {% empty %}
+                    <p>Сообщений пока нет. Начните общение!</p>
+                {% endfor %}
+            {% else %}
+                <p>Сессия ещё не начата. Отправьте сообщение, чтобы начать.</p>
+            {% endif %}
+        </div>
+
+        <form method="POST" id="messageForm" class="d-flex pb-5" action="{% url 'support:send_message' %}">
+            {% csrf_token %}
+            <input type="hidden" name="session_id" value="{% if session %}{{ session.id }}{% endif %}">
+            <textarea id="messageContent" name="content" class="form-control me-2" placeholder="Введите сообщение"
+                      required rows="3" style="resize: none;" oninput="autoResize(this)"></textarea>
+            <button type="submit" class="btn btn-primary">Отправить</button>
+        </form>
+
+
+        <div id="statusMessage" class="mt-2"></div>
+
+        <!-- Добавляем скрытые элементы для session_id и user_username -->
+        <div id="session_id" style="display: none;">{{ session.id }}</div>
+        <div id="user_username" style="display: none;">{{ user.username }}</div>
     </div>
-
-    <form method="POST" id="messageForm" class="d-flex" action="{% url 'support:send_message' %}">
-        {% csrf_token %}
-        <input type="hidden" name="session_id" value="{% if session %}{{ session.id }}{% endif %}">
-        <input type="text" name="content" class="form-control me-2" placeholder="Введите сообщение" required>
-        <button type="submit" class="btn btn-primary">Отправить</button>
-    </form>
-
-    <div id="statusMessage" class="mt-2"></div>
-
-    <!-- Добавляем скрытые элементы для session_id и user_username -->
-    <div id="session_id" style="display: none;">{{ session.id }}</div>
-    <div id="user_username" style="display: none;">{{ user.username }}</div>
-</div>
 {% endblock %}
 
 {% block scripts %}

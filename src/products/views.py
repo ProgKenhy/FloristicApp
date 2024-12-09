@@ -1,9 +1,10 @@
 import openai
-from openai import OpenAIError
+from celery.result import AsyncResult
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView
+from openai import OpenAIError
 
 from .tasks import generate_image
 
@@ -23,14 +24,25 @@ class IndexView(TemplateView):
         if task.id is None:
             return JsonResponse({'error': "Не удалось запустить задачу генерации изображения."})
 
-        context = {
+        return JsonResponse({
             'task_id': task.id,
             'message': "Запрос на генерацию изображения отправлен. Проверьте статус позже.",
-            'image_url': task.get()  # Это будет передано в шаблон
-        }
+        })
 
-        # Вернемся на тот же шаблон с обновленным контекстом
-        return self.render_to_response(context)
+
+def task_status(request, task_id):
+    result = AsyncResult(task_id)
+
+    if result.state == 'PENDING':
+        return JsonResponse({'status': 'pending'})
+
+    if result.state == 'SUCCESS':
+        return JsonResponse({'status': 'success', 'image_url': result.result})
+
+    if result.state == 'FAILURE':
+        return JsonResponse({'status': 'failure', 'error': str(result.result)})
+
+    return JsonResponse({'status': result.state})
 
 
 class TranslaterView(TemplateView):
