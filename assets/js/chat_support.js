@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 'timestamp': new Date().toISOString()
             }));
             messageInput.value = '';  // Очистка поля ввода после отправки
+            messageInput.style.height = 'auto';  // Устанавливаем высоту обратно в изначальное состояние
         }
     });
 
@@ -77,9 +78,16 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessage.textContent = 'Ошибка соединения с сервером.';
         chatBox.appendChild(errorMessage);
     };
+
+    // Автоматическое изменение размера текстового поля
+    function autoResize(element) {
+        element.style.height = 'auto';  // Сбрасываем высоту, чтобы правильно измерить новый размер
+        element.style.height = (element.scrollHeight) + 'px';  // Устанавливаем высоту в зависимости от контента
+    }
+
+    // Применяем autoResize к полю ввода
+    messageInput.addEventListener('input', function() {
+        autoResize(messageInput);
+    });
 });
 
-function autoResize(element) {
-    element.style.height = 'auto';  // Сбрасываем высоту, чтобы правильно измерить новый размер
-    element.style.height = (element.scrollHeight) + 'px';  // Устанавливаем высоту в зависимости от контента
-}
