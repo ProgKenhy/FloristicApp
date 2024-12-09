@@ -21,7 +21,7 @@
         {% endif %}
     </div>
 
-    <form method="POST" id="messageForm" class="d-flex" action="{% url 'support:support_page' %}">
+    <form method="POST" id="messageForm" class="d-flex" action="{% url 'support:send_message' %}">
         {% csrf_token %}
         <input type="hidden" name="session_id" value="{% if session %}{{ session.id }}{% endif %}">
         <input type="text" name="content" class="form-control me-2" placeholder="Введите сообщение" required>

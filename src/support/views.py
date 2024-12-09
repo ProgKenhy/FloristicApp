@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.views.generic.base import TemplateView
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 
 from support.models import ChatSupportMessage, ChatSupportSession
 
@@ -41,15 +42,8 @@ class SendMessageView(APIView):
                 content=content,
             )
 
-            return JsonResponse({
-                'status': 'success',
-                'message': {
-                    'sender': sender,
-                    'content': message.content,
-                    'timestamp': message.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
-                },
-                "session_id": session.id,
-            })
+            # Перенаправление обратно на страницу чата
+            return redirect('support:support_page')
         except ChatSupportSession.DoesNotExist:
             return JsonResponse({"error": "Сессия не найдена."}, status=400)
         except Exception as e:
