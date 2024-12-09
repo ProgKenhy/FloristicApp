@@ -1,36 +1,43 @@
-import * as esbuild from 'esbuild'
-import copyStaticFiles from 'esbuild-copy-static-files'
+import * as esbuild from 'esbuild';
+import copyStaticFiles from 'esbuild-copy-static-files';
 
-let minify = false
-let sourcemap = true
-let watch = true
+let minify = false;
+let sourcemap = true;
+let watch = true;
 
 if (process.env.NODE_ENV === 'production') {
-  minify = true
-  sourcemap = false
-  watch = false
+  minify = true;
+  sourcemap = false;
+  watch = false;
 }
 
 const config = {
   entryPoints: [
-    './js/authorization.js', // Ваши файлы JS
+    './js/authorization.js',
     './js/chat_support.js',
-    './js/contact.js',
-    './js/generation.js',
     './js/generation.js',
     './js/translate.js',
     // Другие файлы JS, если необходимо
   ],
-  outfile: '../public/js/[name].js', // Используйте [name] для динамичного имени выходного файла
+  outdir: '../public/js', // Указываем папку для вывода всех JS файлов
   bundle: true,
   minify: minify,
   sourcemap: sourcemap,
-  plugins: [copyStaticFiles()],
+  plugins: [
+    copyStaticFiles({
+      src: './static', // Укажите путь к исходным файлам
+      dest: '../public', // Укажите путь для целевых файлов
+    }),
+  ],
+};
+
+async function build() {
+  if (watch) {
+    const context = await esbuild.context({...config, logLevel: 'info'});
+    await context.watch();
+  } else {
+    await esbuild.build(config);
+  }
 }
 
-if (watch) {
-  let context = await esbuild.context({...config, logLevel: 'info'})
-  await context.watch()
-} else {
-  esbuild.build(config)
-}
+build();

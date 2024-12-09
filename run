@@ -123,17 +123,19 @@ function yarn:build:js {
 }
 
 function yarn:build:css {
-  # Build CSS assets, this is meant to be run from within the assets container
+    # Build CSS assets, this is meant to be run from within the assets container
   local args=()
 
   if [ "${NODE_ENV:-}" == "production" ]; then
-    args=(--minify)
+    args=(--minify)  # Минимизируем для продакшн-режима
   else
-    args=(--watch)
+    args=(--watch)   # В режиме разработки включаем следящий режим
   fi
 
   mkdir -p ../public/css
-  DEBUG=0 tailwindcss --postcss -i css/app.css -o ../public/css/app.css "${args[@]}"
+  # Используем PostCSS для обработки и минимизации
+#  DEBUG=0 postcss css/style.css -o ../public/css/style.css "${args[@]}"
+  cp css/style.css ../public/css/style.css
 }
 
 function clean {
