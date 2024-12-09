@@ -12,8 +12,16 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const config = {
-  entryPoints: ['./js/authorization.js'],
-  outfile: '../public/js/authorization.js',
+  entryPoints: [
+    './js/authorization.js', // Ваши файлы JS
+    './js/chat_support.js',
+    './js/contact.js',
+    './js/generation.js',
+    './js/generation.js',
+    './js/translate.js',
+    // Другие файлы JS, если необходимо
+  ],
+  outfile: '../public/js/[name].js', // Используйте [name] для динамичного имени выходного файла
   bundle: true,
   minify: minify,
   sourcemap: sourcemap,
