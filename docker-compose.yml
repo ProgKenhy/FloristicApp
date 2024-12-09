@@ -109,8 +109,7 @@ services:
       timeout: "3s"
       start_period: "5s"
       retries: 3
-#    command: daphne -b 0.0.0.0 -p 8001 config.asgi:application
-    command: daphne -u /tmp/daphne.sock --reload
+    command: daphne -b 0.0.0.0 -p 8001 config.asgi:application
     ports:
       - "8001:8001"
     expose:
