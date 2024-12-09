@@ -22,6 +22,11 @@ TESTING = "test" in sys.argv
 allowed_hosts = os.getenv("ALLOWED_HOSTS", ".localhost,127.0.0.1,[::1]")
 ALLOWED_HOSTS = list(map(str.strip, allowed_hosts.split(",")))
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://floriai.ru",  # Основной домен
+    "https://www.floriai.ru",  # Если есть www версия
+]
+
 # Application definition
 
 INSTALLED_APPS = [
