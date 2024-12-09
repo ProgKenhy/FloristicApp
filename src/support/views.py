@@ -52,6 +52,9 @@ class SendMessageView(LoginRequiredMixin, APIView):
 
 class ModeratorDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'support/support_page_for_moderator.html'
+    
+    def test_func(self):
+        return self.request.user.is_staff
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
