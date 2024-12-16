@@ -15,7 +15,7 @@ DOMAIN_NAME = os.getenv('DOMAIN_NAME', 'http://localhost:8000')
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", False)
+DEBUG = os.getenv("DEBUG", False).lower() == 'true'
 
 TESTING = "test" in sys.argv
 
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -173,8 +174,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = ["/public", os.path.join(BASE_DIR, "..", "public")]
-STATIC_ROOT = "../public_collected"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = os.path.join(BASE_DIR, "..", "public_collected")
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "..", "media")
 MEDIA_URL = "/media/"
@@ -211,8 +217,8 @@ LOGOUT_REDIRECT_URL = '/'
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
-    CELERY_TASK_ALWAYS_EAGER = True
-    CELERY_TASK_EAGER_PROPAGATES = True
+    # CELERY_TASK_ALWAYS_EAGER = True
+    # CELERY_TASK_EAGER_PROPAGATES = True
 else:
     EMAIL_HOST = os.getenv('EMAIL_HOST')
     EMAIL_PORT = os.getenv('EMAIL_PORT')
@@ -250,22 +256,16 @@ SECRET_KEY_KANDINSKY = os.getenv('SECRET_KEY_KANDINSKY')
 API_KEY_OPENAI = os.getenv('API_KEY_OPENAI')
 
 # Channels
-# ASGI_APPLICATION = "config.asgi.application"
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [REDIS_URL],
-#         },
-#     },
-# }
-
 ASGI_APPLICATION = "config.asgi.application"
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': "channels.layers.InMemoryChannelLayer"
-        }
-    }
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [REDIS_URL],
+        },
+    },
+}
+
 
 LOGGING = {
     'version': 1,

@@ -4,9 +4,9 @@
 
 ### App #######################################################################
 
-public/*
+public/
 !public/.keep
-public_collected/*
+public_collected/
 !public_collected/.keep
 .idea
 
