@@ -15,7 +15,7 @@ DOMAIN_NAME = os.getenv('DOMAIN_NAME', 'http://localhost:8000')
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", False).lower() == 'true'
+DEBUG = os.getenv("DEBUG", "False").lower() == 'true'
 
 TESTING = "test" in sys.argv
 
