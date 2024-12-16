@@ -3,7 +3,7 @@
 
 <!-- Карусель изображений -->
 {% block content %}
-    <div class="carousel-container my-1">
+    <div class="carousel-container">
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
@@ -46,7 +46,7 @@
                     <div class="jumbotron text-center">
                         <h1>Добро пожаловать в FloriAI!</h1>
                         <p class="lead">Ваш переводчик языка цветов на основе искусственного
-                            интеллекта.</p class="lead">
+                            интеллекта.</p>
                     </div>
                 </div>
                 <h4>Введите необходимые параметры букета (генерация может занять до минуты)</h4>
@@ -68,21 +68,12 @@
             <div class="container text-center col-lg-6 col-md-6 mt-0">
                 <h3>Ваше сгенерированное изображение</h3>
                 <div class="image-container">
-                    {% if image_url %}
-                        <img
-                                class="img-fluid rounded-lg"
-                                src="{{ image_url }}"
-                                alt="Сгенерированное изображение"
-                                style="max-width: 512px; border: 1px solid #ddd; padding: 5px; margin-top: 10px;"
-                        />
-                    {% else %}
-                        <img
-                                class="w-100 rounded-lg"
-                                src="{% static 'img/bg_gen.jpeg' %}"
-                                alt="Фоновое изображение"
-                                style="max-width: 512px; border: 1px solid #ddd; padding: 5px; margin-top: 10px;"
-                        />
-                    {% endif %}
+                    <img
+                        class="img-fluid rounded-lg img_generate"
+                        src="{% if image_url %}{{ image_url }}
+                             {% else %}{% static 'img/bg_gen.jpeg' %}{% endif %}"
+                        alt="Генерация изображения"
+                    />
                 </div>
             </div>
         </div>
@@ -95,7 +86,6 @@
                 <a class="btn btn-primary btn-lg mx-2" href="{% url 'translater:index' %}" role="button">Начать
                 </a>
             </p>
-
         </div>
     </div>
     <!-- Рекламный баннер -->

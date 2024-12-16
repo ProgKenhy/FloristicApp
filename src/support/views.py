@@ -52,7 +52,7 @@ class SendMessageView(LoginRequiredMixin, APIView):
 
 class ModeratorDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'support/support_page_for_moderator.html'
-    
+
     def test_func(self):
         return self.request.user.is_staff
 
