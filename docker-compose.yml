@@ -142,7 +142,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/dev/:/etc/nginx/conf.d:ro  # Монтируем файл конфигурации Nginx
+      - ./nginx/prod/:/etc/nginx/conf.d:ro  # Монтируем файл конфигурации Nginx
       - ./public_collected:/app/public_collected
       - ./media:/app/media
       - /var/certbot/conf:/etc/letsencrypt
