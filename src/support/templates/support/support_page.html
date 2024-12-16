@@ -5,7 +5,7 @@
     <div class="container mt-4">
         <h1 class="pb-3 text-center">Чат с техподдержкой</h1>
 
-        <div class="chat-box border p-3 mb-3">
+        <div class="chat-box p-3 mb-3 bg-white">
             {% if session %}
                 {% for message in messages %}
                     <div class="message mb-2">
@@ -25,7 +25,7 @@
             {% csrf_token %}
             <input type="hidden" name="session_id" value="{% if session %}{{ session.id }}{% endif %}">
             <textarea id="messageContent" name="content" class="form-control me-2" placeholder="Введите сообщение"
-                      required rows="3" style="resize: none;" oninput="autoResize(this)"></textarea>
+                      required rows="3" oninput="autoResize(this)"></textarea>
             <button type="submit" class="btn btn-primary">Отправить</button>
         </form>
 

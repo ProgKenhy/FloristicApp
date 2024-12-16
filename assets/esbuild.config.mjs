@@ -23,12 +23,7 @@ const config = {
   bundle: true,
   minify: minify,
   sourcemap: sourcemap,
-  plugins: [
-    copyStaticFiles({
-      src: './static', // Укажите путь к исходным файлам
-      dest: '../public', // Укажите путь для целевых файлов
-    }),
-  ],
+  plugins: [],
 };
 
 async function build() {

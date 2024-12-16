@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@281&display=swap');
+
+html, body {
+    font-family: 'Roboto', sans-serif; /* Основной шрифт для всего текста */
+}
+
+
+.oswald-main-text {
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 281;
+  font-style: normal;
+}
+
+.pacifico-regular {
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+textarea.form-control {
+    font-family: 'Open Sans', sans-serif; /* Используем тот же шрифт для текстовых областей */
+    font-size: 1rem; /* Уменьшаем размер шрифта для textarea */
+    padding: 10px; /* Отступы внутри textarea */
+    border-radius: 10px; /* Скругляем углы */
+    border: 2px solid #ccc; /* Легкая граница */
+    resize: none; /* Отключаем изменение размера */
+}
+
+
+.container {
+    font-family: 'Roboto', sans-serif; /* Основной шрифт для контейнера */
+}

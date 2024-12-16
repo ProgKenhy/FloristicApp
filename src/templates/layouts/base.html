@@ -9,6 +9,7 @@
     <title>FloriAI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/fonts.css' %}"/>
 
     <link rel="icon" type="image/png" href="{% static 'icon/favicon-96x96.png' %}" sizes="96x96"/>
     <link rel="icon" type="image/svg+xml" href="{% static 'icon/favicon.svg' %}"/>
@@ -21,17 +22,16 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-gray">
-        <a class="navbar-brand mx-3" href="{% url 'index' %}">FloriAI</a>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand mx-3 d-flex align-items-center" href="{% url 'index' %}">
+            <img src="{% static 'img/ProjIcon.png' %}" alt="FloriAI Icon" width="140">
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Главная</a>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'translater:index' %}">Перевести</a>
                 </li>
@@ -61,7 +61,11 @@
                         </li>
                     </ul>
                 {% endif %}
-                <ul class="navbar-nav">
+                <ul class="navbar-nav me-3">
+                    <li class="nav-item">
+                        <span>Здравствуйте, {{ user.first_name }}!</span>
+                    </li>
+                </ul>                <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'users:profile' user.id %}">Профиль</a>
                     </li>
@@ -77,8 +81,9 @@
             {% endif %}
         </div>
     </nav>
-
 </header>
+
+
 
 {% block content %} {% endblock %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

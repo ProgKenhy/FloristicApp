@@ -133,9 +133,12 @@ function yarn:build:css {
   fi
 
   mkdir -p ../public/css
+  mkdir -p ../public/img
   # Используем PostCSS для обработки и минимизации
 #  DEBUG=0 postcss css/style.css -o ../public/css/style.css "${args[@]}"
-  cp css/style.css ../public/css/style.css
+  cp -r css/ ../public/
+  cp -r img/ ../public/
+  cp -r static/* ../public/
 }
 
 function clean {
