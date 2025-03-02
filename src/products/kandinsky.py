@@ -2,7 +2,6 @@ import json
 import time
 import requests
 import base64
-from django.conf import settings
 
 
 
@@ -53,18 +52,3 @@ class Text2ImageAPI:
         with open(filename, "wb") as image_file:
             image_file.write(image_data)
 
-
-if __name__ == '__main__':
-    api = Text2ImageAPI('https://api-key.fusionbrain.ai/', settings.API_KEY_KANDINSKY, settings.SECRET_KEY_KANDINSKY)
-    model_id = api.get_model()
-    uuid = api.generate(
-        "Картинка на рабочий стол для программиста без людей в наивысшем качестве",
-        model_id)
-    images = api.check_generation(uuid)
-
-    # Save the first image as a file if the generation succeeded
-    if images:
-        api.save_image(images[0], "generated_image.jpg")
-        print("Image saved as 'generated_image.jpg'")
-    else:
-        print("Image generation failed or timed out.")
